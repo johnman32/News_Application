@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Latest Articles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Latest Articles</h1>
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if article.image %}
+                <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.description|truncatewords:20 }}</p>
+                    <p class="text-muted">
+                        Published by: <a href="{% url 'publisher_detail' article.published_by.pk %}">{{ article.published_by.name }}</a>
+                    </p>
+                    {% if article.author and article.author.profile %}
+                    <p class="text-muted">
+                        Author: <a href="{% url 'journalist_detail' article.author.profile.pk %}">{{ article.author.username }}</a>
+                    </p>
+                    {% endif %}
+                    <p class="text-muted">{{ article.date_uploaded }}</p>
+                    <a href="{% url 'update_article' article.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="POST" action="{% url 'delete_article' article.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

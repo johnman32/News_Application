@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{% block title %}News Application{% endblock %}</title>
+    <h1 class="mb-5"> NEWS APPLICATION </h1>
+</head>
+<body style="background-color: #fdf6f0;"class="container mt-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/articles">Articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/articles/newsletters">Newsletters</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/publishers/create_publisher">Add Publisher</a>
+                {% if request.user.is_authenticated and request.user.profile.role == 'editor' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/articles/editor/view">Editor Dashboard</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+    <hr>
+
+{% block content %}
+{% endblock %}
+    
+{% if request.user.is_authenticated %}
+    <div class="subscription-sidebar">
+        <h5> My Subscriptions</h5>
+        
+        {% if request.user.profile.publisher_subscribed.all or request.user.profile.journalist_subscribed.all %}
+            <!-- Publisher Subscriptions -->
+            {% if request.user.profile.publisher_subscribed.all %}
+                <div class="mb-3">
+                    <strong style="font-size: 0.9rem; color: #666;">Publishers:</strong>
+                    {% for publisher in request.user.profile.publisher_subscribed.all %}
+                        <div class="subscription-item">
+                            <span>{{ publisher.name }}</span>
+                            <span class="subscription-badge badge-publisher">Publisher</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Journalist Subscriptions -->
+            {% if request.user.profile.journalist_subscribed.all %}
+                <div>
+                    <strong style="font-size: 0.9rem; color: #666;">Journalists:</strong>
+                    {% for journalist in request.user.profile.journalist_subscribed.all %}
+                        <div class="subscription-item">
+                            <span>{{ journalist.user.username }}</span>
+                            <span class="subscription-badge badge-journalist">Journalist</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p class="text-muted" style="font-size: 0.9rem;">No subscriptions yet.</p>
+            <a href="/articles" class="btn btn-sm btn-outline-primary mt-2">Browse Articles</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% if request.user.is_authenticated %}
+<footer class="fixed-bottom bg-dark text-white py-2 px-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <small>Logged in as: <strong>{{ request.user.username }}</strong> | Role: <strong>{{ request.user.profile.role|title }}</strong></small>
+            <form method="POST" action="{% url 'logout_user'%}" style="display:inline; margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+        {% if request.user.profile.role == 'journalist' %}
+        <div>
+              <a href="{% url 'create_article'%}" class="btn btn-success btn-sm">Create Article</a>
+              <a href="{% url 'create_newsletter'%}" class="btn btn-success btn-sm ms-2">Create Newsletter</a>
+        </div>
+         {% endif %}
+    </div>
+</footer>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+ 
