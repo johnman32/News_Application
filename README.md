@@ -1,11 +1,11 @@
 # News Application
 
-A Django-based news publishing system with role based access control for Readers, Journalists, and Editors.
+A Django-based news publishing system with role-based access control for Readers, Journalists, and Editors.
 
 ## Features
 
 - Article creation and approval workflow
-- Role-based permissions 
+- Role-based permissions (Reader, Journalist, Editor)
 - Newsletter subscriptions
 - RESTful API with authentication
 - Automated notifications
@@ -18,90 +18,84 @@ A Django-based news publishing system with role based access control for Readers
 
 ## Setup Instructions
 
-### Option 1: Running with Virtual Environment 
+### Option 1: Running with Virtual Environment
 
-1. **Clone the repository:**
-```bash
-   git clone <your-repo-url>
-   cd News_application
+1. Clone the repository:
+```
+   git clone https://github.com/johnman32/News_Application.git
+   cd News_Application
 ```
 
-2. **Create and activate virtual environment:**
-```bash
+2. Create and activate virtual environment:
+```
    python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
 ```
+   On Windows: `venv\Scripts\activate`
 
-3. **Install dependencies:**
-```bash
+3. Install dependencies:
+```
    pip install -r requirements.txt
 ```
 
-4. **Set up MySQL database:**
+4. Set up MySQL database:
    - Create a MySQL database named `news_db`
-   - Update `News_application/settings.py` with your MySQL credentials:
-```python
-     DATABASES = {
-         'default': {
-             'ENGINE': 'django.db.backends.mysql',
-             'NAME': 'news_db',
-             'USER': 'your_username',
-             'PASSWORD': 'your_password',
-             'HOST': 'localhost',
-             'PORT': '3306',
-         }
-     }
-```
+   - Update database credentials in `News_application/settings.py`
 
-5. **Run migrations:**
-```bash
+5. Run migrations:
+```
    python manage.py migrate
 ```
 
-6. **Create a superuser:**
-```bash
+6. Create a superuser:
+```
    python manage.py createsuperuser
 ```
 
-7. **Run the development server:**
-```bash
+7. Run the development server:
+```
    python manage.py runserver
 ```
 
-8. **Access the application:**
-   - Open your browser to `http://localhost:8000`
-   - Admin panel: `http://localhost:8000/admin`
+8. Access the application at `http://localhost:8000`
 
 ### Option 2: Running with Docker
 
-1. **Clone the repository:**
-```bash
-   git clone <your-repo-url>
-   cd News_application
+1. Clone the repository:
+```
+   git clone https://github.com/johnman32/News_Application.git
+   cd News_Application
 ```
 
-2. **Build the Docker image:**
-```bash
+2. Build the Docker image:
+```
    docker build -t news-application .
 ```
 
-3. **Run the container:**
-```bash
+3. Run the container:
+```
    docker run -p 8000:8000 news-application
 ```
 
-4. **Access the application:**
-   - Open your browser to `http://localhost:8000`
+4. Access the application at `http://localhost:8000`
 
-**Note:** The Docker version uses SQLite instead of MySQL.
+**Note:** The Docker version uses SQLite instead of MySQL for simplicity.
 
+### Running from Docker Hub
+
+You can pull and run the pre-built image:
+```
+docker run -p 8000:8000 toobyy/news-application:latest
+```
 
 ## Security Notes
 
-Before running the application, you must:
-1. Set your own `SECRET_KEY` in `News_application/settings.py`
-2. Configure your database credentials
-3. Never commit sensitive credentials to version control
+**IMPORTANT:** Do not commit sensitive information such as:
+- Database passwords
+- API keys  
+- Secret keys
+
+Configure these using environment variables before running the application.
 
 To generate a new Django secret key:
 ```python
@@ -126,9 +120,3 @@ News_application/
 ## Documentation
 
 Generated documentation is available in the `docs/_build/html/` directory.
-
-To rebuild documentation:
-```bash
-cd docs
-make html
-```
