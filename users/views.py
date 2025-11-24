@@ -8,7 +8,14 @@ from django.contrib.auth.models import Group
 
 def journalist_detail(request, pk):
     """
-    View to display a journalist's profile and their published work
+    View to display a journalist's profile and their published work.
+
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :param pk: Primary key of the journalist
+    :type pk: int
+    :returns: Rendered HTML page with journalist details, articles and newsletters
+    :type: HttpResponse
     """
     journalist_profile = get_object_or_404(UserProfile, pk=pk, role='journalist')
     articles = journalist_profile.articles_published.all().order_by('-date_uploaded')
@@ -24,9 +31,15 @@ def journalist_detail(request, pk):
 @login_required
 def subscribe_to_journalist(request, pk):
     """
-    View to subscribe to journalist
-    """
+    View to subscribe the current user to a journalist.
 
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :param pk: Primary key of the journalist
+    :type pk: int
+    :returns: Redirect to the journalist detail page
+    :type: HttpResponse
+    """
     journalist = get_object_or_404(UserProfile, pk=pk, role='journalist')
     user_profile = request.user.profile
 
@@ -37,9 +50,15 @@ def subscribe_to_journalist(request, pk):
 @login_required
 def unsubscribe_from_journalist(request, pk):
     """
-    View to unsubscribe to journalist
-    """
+    View to unsubscribe the current user from a journalist.
 
+    :param request: The HTTP request object
+    :type request: HttpRequest
+    :param pk: Primary key of the journalist's user profile
+    :type pk: int
+    :returns: Redirect to journalist detail page
+    :type: HttpResponse
+    """
     journalist = get_object_or_404(UserProfile, pk=pk, role='journalist')
     user_profile = request.user.profile
 
