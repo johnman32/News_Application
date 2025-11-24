@@ -6,7 +6,14 @@ from .forms import PublisherForm
 
 def publisher_detail(request, pk):
     """
-    View to display a single publisher's profile and their articles
+    View to display a single publisher's profile and their articles.
+
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :param pk: Primary key of the publisher
+    :type pk: int
+    :returns: Rendered HTML page with publisher details and articles
+    :type: HttpResponse
     """
     publisher = get_object_or_404(Publisher, pk=pk)
     articles = Article.objects.filter(published_by=publisher).order_by('-date_uploaded')
@@ -18,6 +25,14 @@ def publisher_detail(request, pk):
 
 
 def create_publisher(request):
+    """
+    View to create a new publisher object
+
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :returns: Rendered form template or redirect to articles view
+    :type: HttpResponse
+    """
     if request.method == "POST":
         form = PublisherForm(request.POST, request.FILES)
         if form.is_valid():
@@ -32,7 +47,14 @@ def create_publisher(request):
 @login_required
 def subscribe_to_publisher(request, pk):
     """
-    View to subscribe to publisher
+    View to subscribe the current user to a publisher
+
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :param pk: Primary key of the publisher
+    :type pk: int
+    :returns: Redirect to the publisher detail page
+    :type: HttpResponse
     """
     publisher = get_object_or_404(Publisher, pk=pk)
     user_profile = request.user.profile
@@ -44,7 +66,14 @@ def subscribe_to_publisher(request, pk):
 @login_required
 def unsubscribe_from_publisher(request, pk):
     """
-    View to unsubscribe to a publisher
+    View to unsubscribe the current user from a publisher
+
+    :param request: HTTP request object
+    :type request: HTTPRequest
+    :param pk: Primary key of the publisher
+    :type pk: int
+    :returns: Redirect to the publisher detail page
+    :type: HttpResponse
     """
     publisher = get_object_or_404(Publisher, pk=pk)
     user_profile = request.user.profile
